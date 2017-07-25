@@ -41,7 +41,11 @@ public class NetworkUtils {
                 .build();
 
         Response response = client.newCall(request).execute();
-        return response.body().string();
+
+        if (response != null) {
+            return response.body().string();
+        }
+        return null;
     }
 
     public static ArrayList<MovieBean> parseJson(String jsonString, String keys) {

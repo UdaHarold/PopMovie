@@ -33,6 +33,7 @@ public class MovieGridActivity extends AppCompatActivity
     private static final String RESULT_KEY = "results";
     private static final int MOVIE_LOADER_ID = 1;
     private static final String ORDER_BY = "orderBy";
+    private static final String API_KEY = "";
 
     private RecyclerView movieGrid;
     private MovieAdapter movieAdapter;
@@ -86,7 +87,7 @@ public class MovieGridActivity extends AppCompatActivity
 
                 try {
                     Map<String, String> params = new HashMap<>();
-                    params.put("api_key", "c4412473fc6650cea8c5372e6ddddf2d");
+                    params.put("api_key", API_KEY);
                     String url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_URL + order, params);
                     movieList = NetworkUtils.parseJson(url, RESULT_KEY);
                     return movieList;

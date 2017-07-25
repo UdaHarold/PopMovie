@@ -2,6 +2,8 @@ package com.example.zhangfan.udapopmovies;
 
 import java.io.Serializable;
 
+import static com.example.zhangfan.udapopmovies.R.id.vote_average;
+
 /**
  * Created by zhangfan on 2017/7/17.
  */
@@ -16,23 +18,6 @@ public class MovieBean implements Serializable {
     private String poster_path; //海报图（List）
     private String backdrop_path; //背景图（Detail）
 
-    public String getPoster_path() {
-        return poster_path;
-    }
-
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
-    }
-
-    public String getBackdrop_path() {
-        return backdrop_path;
-    }
-
-    public void setBackdrop_path(String backdrop_path) {
-        this.backdrop_path = backdrop_path;
-    }
-
-
     public int getId() {
         return id;
     }
@@ -41,12 +26,12 @@ public class MovieBean implements Serializable {
         this.id = id;
     }
 
-    public float getVote_average() {
+    public float getVoteaAverage() {
         return vote_average;
     }
 
-    public void setVote_average(float vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteaAverage(float voteaAverage) {
+        this.vote_average = voteaAverage;
     }
 
     public double getPopularity() {
@@ -73,12 +58,28 @@ public class MovieBean implements Serializable {
         this.overview = overview;
     }
 
-    public String getRelease_date() {
+    public String getReleaseDate() {
         return release_date;
     }
 
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(String releaseDate) {
+        this.release_date = releaseDate;
+    }
+
+    public String getPosterPath() {
+        return poster_path;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.poster_path = posterPath;
+    }
+
+    public String getBackdropPath() {
+        return backdrop_path;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdrop_path = backdropPath;
     }
 
 

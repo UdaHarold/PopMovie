@@ -31,11 +31,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (movie != null) {
             mTitle.setText(movie.getTitle());
 
-            String imageUrl = MOVIE_IMAGE_URL + movie.getBackdrop_path();  //背景图
+            String imageUrl = MOVIE_IMAGE_URL + movie.getBackdropPath();  //背景图
             Picasso.with(MovieDetailActivity.this).load(imageUrl).into(mBackgroud);
 
-            mRealeseDate.setText(movie.getRelease_date());
-            mVote.setText(String.valueOf(movie.getVote_average()));
+            mRealeseDate.setText(movie.getReleaseDate());
+            mVote.setText(String.valueOf(movie.getVoteaAverage()));
             mOverview.setText(movie.getOverview());
         }
 

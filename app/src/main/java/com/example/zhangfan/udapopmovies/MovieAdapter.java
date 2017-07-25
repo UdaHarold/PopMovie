@@ -1,6 +1,7 @@
 package com.example.zhangfan.udapopmovies;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,7 +43,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
 
 
         GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        lp.height = parent.getMeasuredHeight() / 2;
+
+
+        // 假如是横屏，图片高度为设备宽度
+
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            lp.height = parent.getMeasuredWidth();
+        } else {
+            lp.height = parent.getMeasuredHeight() / 2;
+        }
+
+
         view.setLayoutParams(lp);
 
         MoiveViewHolder viewHolder = new MoiveViewHolder(view);
@@ -52,7 +63,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
     @Override
     public void onBindViewHolder(MoiveViewHolder holder, int position) {
         MovieBean movie = movieList.get(position);
-        String imageUrl = MOVIE_IMAGE_URL + movie.getPoster_path();  //海报图
+        String imageUrl = MOVIE_IMAGE_URL + movie.getPosterPath();  //海报图
 
         Picasso.with(mActivity).load(imageUrl).into(holder.mMovieImage);
     }
@@ -64,7 +75,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
         }
         return movieList.size();
     }
-
 
 
     class MoiveViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
