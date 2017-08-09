@@ -2,6 +2,7 @@ package com.example.zhangfan.udapopmovies;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,14 +22,14 @@ import static android.R.attr.id;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHolder> {
 
-    private ArrayList<MovieBean> movieList;
-    private Context mActivity;
+    private Cursor mCursor;
+    private Context mContext;
     private final MovieItemOnClickListener movieItemOnClickListener;
     private static final String MOVIE_IMAGE_URL = "http://image.tmdb.org/t/p/w185";
 
     public MovieAdapter(Context context, MovieItemOnClickListener movieLisner) {
         movieItemOnClickListener = movieLisner;
-        mActivity = context;
+        mContext = context;
     }
 
     public interface MovieItemOnClickListener {
@@ -37,17 +38,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
 
     @Override
     public MoiveViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.movie_grid_item, parent, false);
-
+        view.setFocusable(true);
 
         GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) view.getLayoutParams();
 
 
         // 假如是横屏，图片高度为设备宽度
 
-        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             lp.height = parent.getMeasuredWidth();
         } else {
             lp.height = parent.getMeasuredHeight() / 2;
@@ -62,23 +62,32 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
 
     @Override
     public void onBindViewHolder(MoiveViewHolder holder, int position) {
-        MovieBean movie = movieList.get(position);
-        String imageUrl = MOVIE_IMAGE_URL + movie.getPosterPath();  //海报图
+        mCursor.moveToPosition(position);
 
-        Picasso.with(mActivity).load(imageUrl).into(holder.mMovieImage);
+//        MovieBean movie = movieList.get(position);
+
+        String posterPath = mCursor.getString(MovieGridActivity.INDEX_MOVIE_POSTER);
+        String imageUrl = MOVIE_IMAGE_URL + posterPath;  //海报图
+
+        Picasso.with(mContext).load(imageUrl).into(holder.mMovieImage);
     }
 
     @Override
     public int getItemCount() {
-        if (movieList == null) {
+        if (mCursor == null) {
             return 0;
         }
-        return movieList.size();
+        return mCursor.getCount();
+    }
+
+    public void swapCursor(Cursor cursor) {
+        mCursor = cursor;
+        notifyDataSetChanged();
     }
 
 
     class MoiveViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ImageView mMovieImage;
+        final ImageView mMovieImage;
 
         public MoiveViewHolder(View itemView) {
             super(itemView);
@@ -89,13 +98,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            MovieBean movie = movieList.get(adapterPosition);
+
+            mCursor.moveToPosition(adapterPosition);
+
+            MovieBean movie = new MovieBean();
+            movie.setId(mCursor.getInt(MovieGridActivity.INDEX_MOVIE_ID));
+            movie.setTitle(mCursor.getString(MovieGridActivity.INDEX_MOVIE_TITLE));
+            movie.setOverview(mCursor.getString(MovieGridActivity.INDEX_MOVIE_OVERVIEW));
+            movie.setPopularity(mCursor.getDouble(MovieGridActivity.INDEX_MOVIE_POPULARITY));
+            movie.setVoteaAverage(mCursor.getFloat(MovieGridActivity.INDEX_MOVIE_VOTE));
+            movie.setReleaseDate(mCursor.getString(MovieGridActivity.INDEX_MOVIE_RELEASE));
+            movie.setPosterPath(mCursor.getString(MovieGridActivity.INDEX_MOVIE_POSTER));
+            movie.setBackdropPath(mCursor.getString(MovieGridActivity.INDEX_MOVIE_BACKDROP));
+            movie.setStar(mCursor.getInt(MovieGridActivity.INDEX_MOVIE_STAR));
+
             movieItemOnClickListener.onItemClick(movie);
         }
     }
 
-    public void setMovieDaList(ArrayList<MovieBean> movies) {
-        movieList = movies;
-        notifyDataSetChanged();
-    }
 }

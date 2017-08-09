@@ -14,4 +14,10 @@
         android:title="@string/order_populate"
         app:showAsAction="never"></item>
 
+    <item
+        android:id="@+id/order_star"
+        android:orderInCategory="3"
+        android:title="@string/order_star"
+        app:showAsAction="never"></item>
+
 </menu>

@@ -2,6 +2,7 @@ package com.example.zhangfan.udapopmovies;
 
 import java.io.Serializable;
 
+import static com.example.zhangfan.udapopmovies.R.id.runtime;
 import static com.example.zhangfan.udapopmovies.R.id.vote_average;
 
 /**
@@ -17,6 +18,18 @@ public class MovieBean implements Serializable {
     private String release_date;  //发布日期
     private String poster_path; //海报图（List）
     private String backdrop_path; //背景图（Detail）
+    private int runtime;  // 电影时长
+    private int star;  // 是否收藏(1表示收藏，默认是0)
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
+
 
     public int getId() {
         return id;
@@ -80,6 +93,14 @@ public class MovieBean implements Serializable {
 
     public void setBackdropPath(String backdropPath) {
         this.backdrop_path = backdropPath;
+    }
+
+    public int getStar() {
+        return star;
+    }
+
+    public void setStar(int star) {
+        this.star = star;
     }
 
 

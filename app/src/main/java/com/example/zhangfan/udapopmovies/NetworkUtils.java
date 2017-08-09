@@ -7,9 +7,13 @@ import android.net.NetworkInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -18,9 +22,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.R.attr.value;
+
 
 /**
- * Created by zhangfan on 2017/7/17.
+ * Created by Harold on 2017/7/17.
  */
 
 public class NetworkUtils {
@@ -56,6 +62,36 @@ public class NetworkUtils {
         } else {
             return null;
         }
+    }
+
+    public static int parseJsonToMovie(String jsonString) {
+        Gson gson = new Gson();
+        MovieBean result = gson.fromJson(jsonString, MovieBean.class);
+        if (result != null) {
+            return result.getRuntime();
+        } else {
+            return 0;
+        }
+    }
+
+    public static ArrayList<Video> parseJsonToVideoPath(String jsonString) {
+        GsonBuilder gson = new GsonBuilder();
+        Type collectionType = new TypeToken<Result<Video>>() {
+        }.getType();
+
+        Result<Video> videos = gson.create().fromJson(jsonString, collectionType);
+
+        return videos.getResults();
+    }
+
+    public static ArrayList<Review> parseJsonToReview(String jsonString) {
+        GsonBuilder gson = new GsonBuilder();
+        Type collectionType = new TypeToken<Result<Review>>() {
+        }.getType();
+
+        Result<Review> videos = gson.create().fromJson(jsonString, collectionType);
+
+        return videos.getResults();
     }
 
     public static boolean isNetworkAvailable(Context context) {

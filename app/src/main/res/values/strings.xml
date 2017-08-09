@@ -19,5 +19,7 @@
     
     <string name="order_populate">最受欢迎</string>
 
+    <string name="order_star">我的收藏</string>
+
 
 </resources>

@@ -3,7 +3,7 @@ package com.example.zhangfan.udapopmovies;
 import java.util.ArrayList;
 
 /**
- * Created by zhangfan on 2017/7/19.
+ * Created by Harold on 2017/7/19.
  */
 
 public class ResponseResult {

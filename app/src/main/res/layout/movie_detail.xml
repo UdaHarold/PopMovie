@@ -82,6 +82,20 @@
                     android:textStyle="italic"
                     tools:text="@string/movie_vote" />
 
+                <TextView
+                    android:id="@+id/runtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:textSize="16sp"
+                    tools:text="时长" />
+
+                <Button
+                    android:id="@+id/star_movie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="收藏" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -94,6 +108,19 @@
             android:textSize="16dp"
             tools:text="overview" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_movie_trailer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/tv_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textSize="16sp"
+            tools:text="review" />
 
     </LinearLayout>
+
 </ScrollView>

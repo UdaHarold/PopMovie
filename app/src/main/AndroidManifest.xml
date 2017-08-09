@@ -25,6 +25,15 @@
             android:name=".MovieDetailActivity"
             android:label="@string/movie_detail"
             android:parentActivityName=".MovieGridActivity"></activity>
+
+        <service
+            android:name=".sync.MovieSyncIntentService"
+            android:exported="false" />
+        <provider
+            android:name=".data.MoiveProvider"
+            android:authorities="com.example.zhangfan.udapopmovies"
+            android:exported="false" />
+
     </application>
 
 </manifest>
