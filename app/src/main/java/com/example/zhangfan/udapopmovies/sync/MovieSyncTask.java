@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.R.transition.move;
+import static com.example.zhangfan.udapopmovies.AppConfig.API_KEY;
+import static com.example.zhangfan.udapopmovies.AppConfig.MOVIE_API_BASE_URL;
 
 /**
  * Created by Harold on 2017/8/3.
@@ -28,12 +30,9 @@ import static android.R.transition.move;
 
 public class MovieSyncTask {
 
-    private static final String MOVIE_API_URL = "http://api.themoviedb.org/3/movie/";
     private static final String POPULAR_URL = "popular";
     private static final String TOP_RATED_URL = "top_rated";
     private static final String RESULT_KEY = "results";
-
-    private static final String API_KEY = "";
 
     synchronized public static void syncMovie(Context context) {
         ArrayList<MovieBean> movieList = null;
@@ -47,7 +46,7 @@ public class MovieSyncTask {
                 Map<String, String> params = new HashMap<>();
                 params.put("api_key", API_KEY);
                 // request popular movie from http, then populate into SQLiteDB
-                String url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_URL + POPULAR_URL, params);
+                String url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_BASE_URL + POPULAR_URL, params);
                 movieList = NetworkUtils.parseJson(url, RESULT_KEY);
                 if (movieList != null && !movieList.isEmpty()) {
                     ContentValues[] movieValues = new ContentValues[movieList.size()];
@@ -71,7 +70,7 @@ public class MovieSyncTask {
                 }
 
                 // request top rated movie from http, then populate into SQLiteDB
-                url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_URL + TOP_RATED_URL, params);
+                url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_BASE_URL + TOP_RATED_URL, params);
                 movieList = NetworkUtils.parseJson(url, RESULT_KEY);
                 if (movieList != null && !movieList.isEmpty()) {
                     ContentValues[] movieValues = new ContentValues[movieList.size()];

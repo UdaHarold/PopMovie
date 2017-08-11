@@ -9,10 +9,11 @@
     <!--android:layout_height="96dp"-->
     <!--android:layout_margin="8dp" />-->
 
-    <WebView
+    <ImageView
         android:id="@+id/video_trailer"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_margin="8dp">
-    </WebView>
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/play"></ImageView>
 </FrameLayout>

@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import static android.R.attr.id;
+import static com.example.zhangfan.udapopmovies.AppConfig.MOVIE_IMAGE_BASE_URL;
 
 /**
  * Created by Harold on 2017/7/18.
@@ -25,7 +26,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
     private Cursor mCursor;
     private Context mContext;
     private final MovieItemOnClickListener movieItemOnClickListener;
-    private static final String MOVIE_IMAGE_URL = "http://image.tmdb.org/t/p/w185";
 
     public MovieAdapter(Context context, MovieItemOnClickListener movieLisner) {
         movieItemOnClickListener = movieLisner;
@@ -63,13 +63,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
     @Override
     public void onBindViewHolder(MoiveViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-
-//        MovieBean movie = movieList.get(position);
-
         String posterPath = mCursor.getString(MovieGridActivity.INDEX_MOVIE_POSTER);
-        String imageUrl = MOVIE_IMAGE_URL + posterPath;  //海报图
+        String imageUrl = MOVIE_IMAGE_BASE_URL + posterPath;  //海报图
 
-        Picasso.with(mContext).load(imageUrl).into(holder.mMovieImage);
+        Picasso.with(mContext)
+                .load(imageUrl)
+                .placeholder(R.mipmap.ic_launcher_round)
+                .error(R.mipmap.ic_launcher_round)
+                .into(holder.mMovieImage);
     }
 
     @Override
@@ -112,7 +113,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoiveViewHol
             movie.setBackdropPath(mCursor.getString(MovieGridActivity.INDEX_MOVIE_BACKDROP));
             movie.setStar(mCursor.getInt(MovieGridActivity.INDEX_MOVIE_STAR));
 
-            movieItemOnClickListener.onItemClick(movie);
+            if (movieItemOnClickListener != null) {
+                movieItemOnClickListener.onItemClick(movie);
+            }
         }
     }
 

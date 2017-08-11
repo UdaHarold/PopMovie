@@ -2,6 +2,7 @@ package com.example.zhangfan.udapopmovies;
 
 import android.content.ContentValues;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -23,6 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.zhangfan.udapopmovies.AppConfig.API_KEY;
+import static com.example.zhangfan.udapopmovies.AppConfig.MOVIE_API_BASE_URL;
+import static com.example.zhangfan.udapopmovies.AppConfig.MOVIE_IMAGE_BASE_URL;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     private TextView mTitle;
@@ -30,14 +35,14 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView mRealeseDate;
     private TextView mVote;
     private TextView mOverview;
-    private static final String MOVIE_IMAGE_URL = "http://image.tmdb.org/t/p/w185";
-    private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
-    private static final String API_KEY = "";
+
     private RecyclerView mMovieTrailer;
     private MovieTrailerAdapter mTrailerAdapter;
     private TextView mRuntimeTextView;
     private TextView mReview;
     private static int MOVIE_ID = 0;
+    private Button starBtn;
+    private static int STAR_STATE = 0;
 
     private static final int MOVIE_RUNTIME_LOADER_ID = 1;
     private static final int MOVIE_VIDEO_LOADER_ID = 2;
@@ -55,6 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mMovieTrailer = (RecyclerView) findViewById(R.id.rv_movie_trailer);
         mRuntimeTextView = (TextView) findViewById(R.id.runtime);
         mReview = (TextView) findViewById(R.id.tv_review);
+        starBtn = (Button) findViewById(R.id.star_movie);
 
         final MovieBean movie = (MovieBean) getIntent().getSerializableExtra(getString(R.string.movie_key));
 
@@ -62,15 +68,15 @@ public class MovieDetailActivity extends AppCompatActivity {
             MOVIE_ID = movie.getId();
             mTitle.setText(movie.getTitle());
 
-            final Button starBtn = (Button) findViewById(R.id.star_movie);
-
             if (movie.getStar() == 0) {
+                STAR_STATE = 0;
                 starBtn.setText("收藏");
             } else {
+                STAR_STATE = 1;
                 starBtn.setText("取消收藏");
             }
 
-            String imageUrl = MOVIE_IMAGE_URL + movie.getBackdropPath();  //背景图
+            String imageUrl = MOVIE_IMAGE_BASE_URL + movie.getBackdropPath();  //背景图
             Picasso.with(MovieDetailActivity.this).load(imageUrl).into(mBackgroud);
 
             mRealeseDate.setText(movie.getReleaseDate());
@@ -81,25 +87,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             starBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-                    contentValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
-                    contentValues.put(MovieContract.MovieEntry.COLUMN_POPULARITY, movie.getPopularity());
-                    contentValues.put(MovieContract.MovieEntry.COLUMN_VOTE, movie.getVoteaAverage());
-                    contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE, movie.getReleaseDate());
-                    contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER, movie.getPosterPath());
-                    contentValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP, movie.getBackdropPath());
-
-                    if (movie.getStar() == 0) {
-                        contentValues.put(MovieContract.MovieEntry.COLUMN_STAR, 1);   // 是否收藏，收藏1
-                        starBtn.setText("取消收藏");
-                    } else {
-                        contentValues.put(MovieContract.MovieEntry.COLUMN_STAR, 0);
-                        starBtn.setText("收藏");
-                    }
-
-                    Uri updateUri = MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(movie.getId())).build();
-                    getContentResolver().update(updateUri, contentValues, null, null);
+                    new UpdateMovie().execute(movie);
 
                 }
             });
@@ -139,7 +127,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     Integer runtime = 0;
                     String url = "";
                     if (MOVIE_ID > 0) {
-                        url = BASE_URL + String.valueOf(MOVIE_ID);
+                        url = MOVIE_API_BASE_URL + String.valueOf(MOVIE_ID);
                         Map<String, String> params = new HashMap<>();
                         params.put("api_key", API_KEY);
                         try {
@@ -193,7 +181,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                     String url = "";
                     if (MOVIE_ID > 0) {
-                        url = BASE_URL + String.valueOf(MOVIE_ID) + "/videos";
+                        url = MOVIE_API_BASE_URL + String.valueOf(MOVIE_ID) + "/videos";
                         Map<String, String> params = new HashMap<>();
                         params.put("api_key", API_KEY);
                         try {
@@ -257,7 +245,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 public ArrayList<Review> loadInBackground() {
                     String url = "";
                     if (MOVIE_ID > 0) {
-                        url = BASE_URL + String.valueOf(MOVIE_ID) + "/reviews";
+                        url = MOVIE_API_BASE_URL + String.valueOf(MOVIE_ID) + "/reviews";
                         Map<String, String> params = new HashMap<>();
                         params.put("api_key", API_KEY);
                         try {
@@ -303,5 +291,47 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         }
     };
+
+    //异步更新收藏
+    private class UpdateMovie extends AsyncTask<MovieBean, Void, Integer> {
+        @Override
+        protected void onPostExecute(Integer isStar) {
+            if (isStar != null) {
+                if (isStar == 0) {
+                    starBtn.setText("收藏");
+                } else {
+                    starBtn.setText("取消收藏");
+                }
+            }
+        }
+
+        @Override
+        protected Integer doInBackground(MovieBean... movieBeen) {
+            if (movieBeen.length > 0) {
+                MovieBean movie = movieBeen[0];
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+                contentValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
+                contentValues.put(MovieContract.MovieEntry.COLUMN_POPULARITY, movie.getPopularity());
+                contentValues.put(MovieContract.MovieEntry.COLUMN_VOTE, movie.getVoteaAverage());
+                contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE, movie.getReleaseDate());
+                contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER, movie.getPosterPath());
+                contentValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP, movie.getBackdropPath());
+
+                if (STAR_STATE == 0) {
+                    STAR_STATE = 1;
+                    contentValues.put(MovieContract.MovieEntry.COLUMN_STAR, STAR_STATE);   // 是否收藏，收藏1
+                } else {
+                    STAR_STATE = 0;
+                    contentValues.put(MovieContract.MovieEntry.COLUMN_STAR, STAR_STATE);
+                }
+
+                Uri updateUri = MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(movie.getId())).build();
+                getContentResolver().update(updateUri, contentValues, null, null);
+                return STAR_STATE;
+            }
+            return null;
+        }
+    }
 
 }

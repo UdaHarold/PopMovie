@@ -183,6 +183,15 @@ public class MovieGridActivity extends AppCompatActivity
 
                 return true;
 
+            case R.id.fresh:
+
+                // 刷新，onCreated 使用 SyncAdapter
+                finish();
+                startActivity(getIntent());
+
+                return true;
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }

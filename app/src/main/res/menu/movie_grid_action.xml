@@ -20,4 +20,10 @@
         android:title="@string/order_star"
         app:showAsAction="never"></item>
 
+    <item
+        android:id="@+id/fresh"
+        android:orderInCategory="4"
+        android:title="@string/fresh"
+        app:showAsAction="never"></item>
+
 </menu>
