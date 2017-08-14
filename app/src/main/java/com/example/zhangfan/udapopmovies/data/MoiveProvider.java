@@ -50,7 +50,8 @@ public class MoiveProvider extends ContentProvider {
                         selectionArgs,
                         null,
                         null,
-                        sortOrder);
+                        sortOrder,
+                        "20");
                 break;
             case CODE_MOVIE_WITH_ID:
                 String id = uri.getLastPathSegment();
