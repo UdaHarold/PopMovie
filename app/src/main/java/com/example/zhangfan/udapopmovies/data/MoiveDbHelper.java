@@ -15,7 +15,7 @@ public class MoiveDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "movie.db";
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public MoiveDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

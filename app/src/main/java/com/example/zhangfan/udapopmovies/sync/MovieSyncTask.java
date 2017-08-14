@@ -71,25 +71,27 @@ public class MovieSyncTask {
 
                     // request top rated movie from http, then populate into SQLiteDB
                     url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_BASE_URL + TOP_RATED_URL, params);
+                    movieList.clear();
                     movieList = NetworkUtils.parseJson(url, RESULT_KEY);
 
-                    movieValues = new ContentValues[movieList.size()];
+                    ContentValues[] topmovieValues = new ContentValues[movieList.size()];
                     i = 0;
                     for (MovieBean movie : movieList) {
-                        movieValues[i].put(MovieEntry._ID, movie.getId());
-                        movieValues[i].put(MovieEntry.COLUMN_TITLE, movie.getTitle());
-                        movieValues[i].put(MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
-                        movieValues[i].put(MovieEntry.COLUMN_POPULARITY, movie.getPopularity());
-                        movieValues[i].put(MovieEntry.COLUMN_VOTE, movie.getVoteaAverage());
-                        movieValues[i].put(MovieEntry.COLUMN_RELEASE, movie.getReleaseDate());
-                        movieValues[i].put(MovieEntry.COLUMN_POSTER, movie.getPosterPath());
-                        movieValues[i].put(MovieEntry.COLUMN_BACKDROP, movie.getBackdropPath());
-                        movieValues[i].put(MovieEntry.COLUMN_STAR, 0);   // 是否收藏，默认0
+                        topmovieValues[i] = new ContentValues();
+                        topmovieValues[i].put(MovieEntry._ID, movie.getId());
+                        topmovieValues[i].put(MovieEntry.COLUMN_TITLE, movie.getTitle());
+                        topmovieValues[i].put(MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
+                        topmovieValues[i].put(MovieEntry.COLUMN_POPULARITY, movie.getPopularity());
+                        topmovieValues[i].put(MovieEntry.COLUMN_VOTE, movie.getVoteaAverage());
+                        topmovieValues[i].put(MovieEntry.COLUMN_RELEASE, movie.getReleaseDate());
+                        topmovieValues[i].put(MovieEntry.COLUMN_POSTER, movie.getPosterPath());
+                        topmovieValues[i].put(MovieEntry.COLUMN_BACKDROP, movie.getBackdropPath());
+                        topmovieValues[i].put(MovieEntry.COLUMN_STAR, 0);   // 是否收藏，默认0
 
                         i++;
                     }
 
-                    contentResolver.bulkInsert(MovieEntry.CONTENT_URI, movieValues);
+                    contentResolver.bulkInsert(MovieEntry.CONTENT_URI, topmovieValues);
                 }
 
 
