@@ -53,7 +53,7 @@ public class MovieSyncTask {
                     int i = 0;
                     for (MovieBean movie : movieList) {
                         movieValues[i] = new ContentValues();
-                        movieValues[i].put(MovieEntry._ID,movie.getId());
+                        movieValues[i].put(MovieEntry._ID, movie.getId());
                         movieValues[i].put(MovieEntry.COLUMN_TITLE, movie.getTitle());
                         movieValues[i].put(MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
                         movieValues[i].put(MovieEntry.COLUMN_POPULARITY, movie.getPopularity());
@@ -67,16 +67,16 @@ public class MovieSyncTask {
                     }
 
                     contentResolver.bulkInsert(MovieEntry.CONTENT_URI, movieValues);
-                }
 
-                // request top rated movie from http, then populate into SQLiteDB
-                url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_BASE_URL + TOP_RATED_URL, params);
-                movieList = NetworkUtils.parseJson(url, RESULT_KEY);
-                if (movieList != null && !movieList.isEmpty()) {
-                    ContentValues[] movieValues = new ContentValues[movieList.size()];
-                    int i = 0;
+
+                    // request top rated movie from http, then populate into SQLiteDB
+                    url = NetworkUtils.httpGetDataFromUrl(MOVIE_API_BASE_URL + TOP_RATED_URL, params);
+                    movieList = NetworkUtils.parseJson(url, RESULT_KEY);
+
+                    movieValues = new ContentValues[movieList.size()];
+                    i = 0;
                     for (MovieBean movie : movieList) {
-                        movieValues[i].put(MovieEntry._ID,movie.getId());
+                        movieValues[i].put(MovieEntry._ID, movie.getId());
                         movieValues[i].put(MovieEntry.COLUMN_TITLE, movie.getTitle());
                         movieValues[i].put(MovieEntry.COLUMN_OVERVIEW, movie.getOverview());
                         movieValues[i].put(MovieEntry.COLUMN_POPULARITY, movie.getPopularity());
