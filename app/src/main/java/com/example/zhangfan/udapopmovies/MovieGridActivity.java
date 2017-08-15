@@ -41,7 +41,8 @@ public class MovieGridActivity extends AppCompatActivity
             MovieEntry.COLUMN_RELEASE,
             MovieEntry.COLUMN_POSTER,
             MovieEntry.COLUMN_BACKDROP,
-            MovieEntry.COLUMN_STAR
+            MovieEntry.COLUMN_STAR,
+            MovieEntry.COLUMN_SORTED
     };
 
     public static final int INDEX_MOVIE_ID = 0;
@@ -53,6 +54,7 @@ public class MovieGridActivity extends AppCompatActivity
     public static final int INDEX_MOVIE_POSTER = 6;
     public static final int INDEX_MOVIE_BACKDROP = 7;
     public static final int INDEX_MOVIE_STAR = 8;
+    public static final int INDEX_MOVIE_SORTED = 9;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,12 @@ public class MovieGridActivity extends AppCompatActivity
                 String[] selectionArgs = null;
                 String sortedBy = null;
                 if (order.equals("popular")) {
+                    selection = MovieEntry.COLUMN_SORTED + " = ? ";
+                    selectionArgs = new String[]{"1"};
                     sortedBy = MovieEntry.COLUMN_POPULARITY + " DESC ";
                 } else if (order.equals("top_rated")) {
+                    selection = MovieEntry.COLUMN_SORTED + " = ? ";
+                    selectionArgs = new String[]{"2"};
                     sortedBy = MovieEntry.COLUMN_VOTE + " DESC ";
                 } else if (order.equals("star")) {
                     selection = MovieEntry.COLUMN_STAR + " = ? ";
@@ -126,7 +132,9 @@ public class MovieGridActivity extends AppCompatActivity
         movieAdapter.swapCursor(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         movieGrid.smoothScrollToPosition(mPosition);
-        if (data != null && data.getCount() != 0) showMoiveGridView();
+        if (data != null && data.getCount() != 0) {
+            showMoiveGridView();
+        }
     }
 
     @Override

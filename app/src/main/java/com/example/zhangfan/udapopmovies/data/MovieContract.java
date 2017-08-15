@@ -40,6 +40,8 @@ public class MovieContract {
 
         public static final String COLUMN_STAR = "star";
 
+        public static final String COLUMN_SORTED = "sorted";  // 1 sorted by popularity; 2 sorted by vote;
+
         public static Uri buildMovieUriWithID(int id) {
             return CONTENT_URI.buildUpon()
                     .appendPath(Integer.toString(id))

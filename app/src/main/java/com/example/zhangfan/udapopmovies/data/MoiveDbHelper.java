@@ -15,7 +15,7 @@ public class MoiveDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "movie.db";
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
 
     public MoiveDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,6 +40,7 @@ public class MoiveDbHelper extends SQLiteOpenHelper {
                         MovieEntry.COLUMN_POSTER   + " BLOB NOT NULL, "                    +
 
                         MovieEntry.COLUMN_STAR   + " INTEGER DEFAULT 0, "                    +
+                        MovieEntry.COLUMN_SORTED + " INTEGER DEFAULT 1, " +
 
                         MovieEntry.COLUMN_BACKDROP + " BLOB NOT NULL) ";
 
